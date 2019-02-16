@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="js,跨域,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="浏览器中url的组成及获取url的组成：  scheme://host:port/path?query#fragment  例如：https://www.google.co.jp/search?q=url&amp;amp;oq=url获取整个url连接： 12var href = window.location.href  console.log(href)                  //http">
+<meta name="keywords" content="js,跨域">
+<meta property="og:type" content="article">
+<meta property="og:title" content="浏览器的同源策略以及跨域访问">
+<meta property="og:url" content="http://yoursite.com/2017/08/17/浏览器的同源策略以及跨域访问/index.html">
+<meta property="og:site_name" content="THE || WAY">
+<meta property="og:description" content="浏览器中url的组成及获取url的组成：  scheme://host:port/path?query#fragment  例如：https://www.google.co.jp/search?q=url&amp;amp;oq=url获取整个url连接： 12var href = window.location.href  console.log(href)                  //http">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-02-16T07:14:46.222Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="浏览器的同源策略以及跨域访问">
+<meta name="twitter:description" content="浏览器中url的组成及获取url的组成：  scheme://host:port/path?query#fragment  例如：https://www.google.co.jp/search?q=url&amp;amp;oq=url获取整个url连接： 12var href = window.location.href  console.log(href)                  //http">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/17/浏览器的同源策略以及跨域访问/">
+
+
+
+
+
+  <title>浏览器的同源策略以及跨域访问 | THE || WAY</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">THE || WAY</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/17/浏览器的同源策略以及跨域访问/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zens Fu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="THE || WAY">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">浏览器的同源策略以及跨域访问</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-17T16:37:28+08:00">
+                2017-08-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/js/" itemprop="url" rel="index">
+                    <span itemprop="name">js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="浏览器中url的组成及获取"><a href="#浏览器中url的组成及获取" class="headerlink" title="浏览器中url的组成及获取"></a>浏览器中url的组成及获取</h2><p>url的组成：</p>
+<blockquote>
+<p>scheme://host:port/path?query#fragment</p>
+</blockquote>
+<p>例如：<a href="https://www.google.co.jp/search?q=url&amp;oq=url" target="_blank" rel="noopener">https://www.google.co.jp/search?q=url&amp;oq=url</a><br><strong>获取整个url连接：</strong></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-tag">var</span> href = window<span class="selector-class">.location</span><span class="selector-class">.href</span></span><br><span class="line">  console.log(href)                  <span class="comment">//https://www.google.co.jp/search?q=url&amp;oq=url</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>逐个分析：</p>
+<ol>
+<li>scheme : 通信协议 如http,https   获取方式：<strong>window.location.protocol</strong></li>
+<li>host: url的主机部分(域名)      获取方式： <strong>window.location.host</strong></li>
+<li>port: url的端口   默认是80 获得的时候会是空的字符串  获取方式：<strong>window.location.port</strong></li>
+<li>path: url的文件路径  获取方式：<strong>window.location.pathname</strong></li>
+<li>query: url的查询参数部分，传递参数，可有多个参数，用”&amp;”符号隔开，每个参数的名和值用”=”符号隔开。  获取方式：<strong>window.location.search</strong></li>
+<li>fragment: url 的信息片断，字符串，用于指定网络资源中的片断。例如一个网页中有多个名词解释，可使用fragment直接定位到某一名词解释<br>获取方式：<strong>window.location.hash</strong></li>
+</ol>
+<h2 id="同源"><a href="#同源" class="headerlink" title="同源"></a>同源</h2><h3 id="什么是同源"><a href="#什么是同源" class="headerlink" title="什么是同源"></a>什么是同源</h3><ol>
+<li>协议相同</li>
+<li>域名相同</li>
+<li>端口相同</li>
+</ol>
+<h3 id="同源的目的和限制"><a href="#同源的目的和限制" class="headerlink" title="同源的目的和限制"></a>同源的目的和限制</h3><p>目的：同源政策的目的，是为了保证用户信息的安全，防止恶意的网站窃取数据。<br>限制：</p>
+<ol>
+<li><strong>如果是非同源的网站 不可以获取不同源站点的Cookie、LocalStorage 和 IndexDB 无法读取。</strong><br> 如果恶意网站获取了你存入在银行网站的cookie，这是非常危险的。不同源网站下存储的localstorage也是不能互相读取的，比如打开腾讯会存储localstorage但是在谷歌的网站下就不能读取腾讯存储的数据。</li>
+<li><strong>DOM无法获得</strong><br> 不同源下的DOM元素也是无法获取的，当你同时打开银行网站和一个恶意网站，为了防止恶意网站的程序随意操作银行网站的Dom元素，是不能获取银行网站的dom元素的。</li>
+<li><strong>无法发送ajax请求</strong><br> 当前域名下发送的ajax请求是无法获取不同源中的服务器中的数据的，除非在服务器中做了一定的设置，允许当前域的访问，那么服务器会针对该请求返回一个头部信息Access-Control-Allow-Origin：XXXXX，如果返回的信息和当前域名一致则可以访问，有的服务器是没有限制其他跨域访问的，返回的是Access-Control-Allow-Origin:* ，这个也是CROS的原理。</li>
+</ol>
+<h3 id="跨域cookie访问"><a href="#跨域cookie访问" class="headerlink" title="跨域cookie访问"></a>跨域cookie访问</h3><p>cookie是服务器写入浏览器的一段数据，用来记录用户的状态和信息，比如 登录信息，购物车信息等。在浏览器发送请求时，cookie会被添加在每个请求的头部中，方便了用户和服务器之间的交互，延续了用户和服务器交互的状态。但是cookie只能在同源的情况下才能共享，<strong>如果2个网站二级域名不同，但是一级域名相同的情况下</strong>，可以通过设置window.domain来跨域进行访问<br>比如： A  <a href="http://www.a.example.com" target="_blank" rel="noopener">www.a.example.com</a><br>　　　B <a href="http://www.b.example.com" target="_blank" rel="noopener">www.b.example.com</a></p>
+<p> 只要设置window.domain = exapmle.com  , 那么在A中设置的cookie在B中就可以访问到了</p>
+<h3 id="跨窗口（域）通信-postMessage"><a href="#跨窗口（域）通信-postMessage" class="headerlink" title="跨窗口（域）通信 postMessage"></a>跨窗口（域）通信 postMessage</h3><p> html 5 新增的api，允许不同窗口之间的通信，不论是否同源。<br> postMessage有2个参数：第一个参数是传递的具体内容，第二个参数是源窗口的源或者  *  表示所有的窗口。<br> 在需要发送消息的源窗口调用postMessage方法即可发送消息。</p>
+<h4 id="源窗口"><a href="#源窗口" class="headerlink" title="源窗口"></a>源窗口</h4><p>　　源窗口可以是全局的window对象，也可以是以下类型的窗口:</p>
+<ol>
+<li>文档窗口中的iframe:<br>var iframe = document.getElementById(‘my-iframe’);<br>var win = iframe.documentWindow;</li>
+<li>JavaScript打开的弹窗：<br>var win = window.open();</li>
+<li>当前文档窗口的父窗口：<br>var win = window.parent;</li>
+<li>打开当前文档的窗口：<br>var win = window.opener();</li>
+</ol>
+<p>比如说： 如果父窗口<a href="http://aaa.com" target="_blank" rel="noopener">http://aaa.com</a>  向  子窗口<a href="http://bbb.com" target="_blank" rel="noopener">http://bbb.com</a> 发送信息<br>var  winb = window.open(‘<a href="http://bbb.com&#39;,title)" target="_blank" rel="noopener">http://bbb.com&#39;,title)</a>;   //打开源窗口<br>winb.postMessage(‘Hello,world’,’<a href="http://bbb.com&#39;)" target="_blank" rel="noopener">http://bbb.com&#39;)</a>;    //源窗口调用该方法<br>或者　子窗口向父窗口发送信息：<br>window.parent.postMessage(‘hello’,<a href="http://aaa.com&#39;" target="_blank" rel="noopener">http://aaa.com&#39;</a>)<br>在父窗口或者子窗口可以通过message事件来监听：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.addEventListener(<span class="string">'message'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(e.origin !== <span class="string">'XXX'</span>)&#123;			<span class="comment">//origin可以用来判断是否是安全源的信息</span></span><br><span class="line">		<span class="keyword">return</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">console</span>.log(e.data)    <span class="comment">//  打印出传递的数据</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>获取的e 参数有三个值：<br>e.data   表示获取的数据<br>e.source  表示发送消息的窗口（不同于上面的源窗口）<br>e.origin   表示发送消息窗口的源</p>
+<p><strong>如果您不希望从其他网站接收message，请不要为message事件添加任何事件侦听器。<br>如果您确实希望从其他网站接收message，请始终使用origin和source属性验证发件人的身份。</strong></p>
+<h3 id="JSONP的跨域访问"><a href="#JSONP的跨域访问" class="headerlink" title="JSONP的跨域访问"></a>JSONP的跨域访问</h3><figure class="highlight vbscript-html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type="text/javascript"&gt;</span><br><span class="line"> 2     //添加&lt;script&gt;标签的方法</span><br><span class="line"> 3     function addScriptTag(src)&#123;</span><br><span class="line"> 4         var script = document.createElement('script');</span><br><span class="line"> 5         script.setAttribute("type","text/javascript");</span><br><span class="line"> 6         script.src = src;</span><br><span class="line"> 7         document.body.appendChild(script);</span><br><span class="line"> 8     &#125;</span><br><span class="line"> 9     </span><br><span class="line">10     window.onload = function()&#123;</span><br><span class="line">11         //搜索apple，将自定义的回调函数名result传入callback参数中</span><br><span class="line">12         addScriptTag("http://ajax.googleapis.com/ajax/services/search/web?v=1.0&amp;q=apple&amp;callback=result");</span><br><span class="line">13         </span><br><span class="line">14     &#125;</span><br><span class="line">15     //自定义的回调函数result</span><br><span class="line">16     function result(data) &#123;</span><br><span class="line">17         //我们就简单的获取apple搜索结果的第一条记录中url数据</span><br><span class="line">18         alert(data.responseData.results[0].unescapedUrl);</span><br><span class="line">19     &#125;</span><br><span class="line">20 &lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/js/" rel="tag"># js</a>
+          
+            <a href="/tags/跨域/" rel="tag"># 跨域</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/08/01/前端代码规范整理/" rel="next" title="前端代码规范整理">
+                <i class="fa fa-chevron-left"></i> 前端代码规范整理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/05/如何在项目中使用v-validate/" rel="prev" title="如何在项目中使用v-validate">
+                如何在项目中使用v-validate <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Zens Fu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#浏览器中url的组成及获取"><span class="nav-number">1.</span> <span class="nav-text">浏览器中url的组成及获取</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同源"><span class="nav-number">2.</span> <span class="nav-text">同源</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是同源"><span class="nav-number">2.1.</span> <span class="nav-text">什么是同源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同源的目的和限制"><span class="nav-number">2.2.</span> <span class="nav-text">同源的目的和限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跨域cookie访问"><span class="nav-number">2.3.</span> <span class="nav-text">跨域cookie访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#跨窗口（域）通信-postMessage"><span class="nav-number">2.4.</span> <span class="nav-text">跨窗口（域）通信 postMessage</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#源窗口"><span class="nav-number">2.4.1.</span> <span class="nav-text">源窗口</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSONP的跨域访问"><span class="nav-number">2.5.</span> <span class="nav-text">JSONP的跨域访问</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zens Fu</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
